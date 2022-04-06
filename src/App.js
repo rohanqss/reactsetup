@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {   BrowserRouter as Router,
+} from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-function App() {
+import { clearMessage } from "./actions/message";
+import { history } from "./helpers/history";
+
+import Routes from "./routes";
+
+const App = () => {
+  const dispatch = useDispatch();
+  const message = useSelector((state) => state.message);
+
+  // useEffect(() => {
+  //   document.addEventListener("contextmenu", (e) => {
+  //     e.preventDefault();
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    if (message.message) {
+      const timer = setTimeout(() => {
+        dispatch(clearMessage());
+      }, 5000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [message, dispatch]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    
+        <Router history={history}>
+            <Routes />
+        </Router>
+    </>
   );
-}
+};
 
 export default App;
